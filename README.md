@@ -6,7 +6,7 @@ This project is an implementation of an email spam detection model using the Log
 
 - **Language**: C
 - **Algorithm**: Logistic Regression
-- **Purpose**: Classify emails as spam or not ham
+- **Purpose**: Classify emails as spam or not spam
 
 ## Usage
 
