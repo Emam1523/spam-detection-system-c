@@ -1,0 +1,24 @@
+Exploratory Data Analysis (EDA) Results:
+
+Total Emails: 2187
+
+Columns:
+Label | Email | Length | Characters | Words
+--------------------------------------------------
+1 |  "Congratulations! You've won a $1000 gift card. Click here to claim it!" | 73 | 61 | 12
+0 |  "Don't forget our meeting tomorrow at 10 AM." | 46 | 38 | 8
+1 |  "You have been selected for a limited time offer. Act now!" | 60 | 49 | 11
+0 |  "The project deadline is next Friday. Please submit your work by then." | 72 | 60 | 12
+1 |  "Urgent: Your account has been compromised. Reset your password immediately." | 78 | 68 | 10
+.... .... .... .... .... .... .... .... .... ....
+.... .... .... .... .... .... .... .... .... ....
+.... .... .... .... .... .... .... .... .... ....
+0 |  "The project scope has been updated. Please review." | 53 | 45 | 8
+1 |  "You have been selected for a special offer. Claim now!" | 57 | 47 | 10
+0 |  "Don't forget to submit your expense report by Monday." | 56 | 47 | 9
+1 |  "Urgent: Your bank account has been frozen. Call now to resolve." | 66 | 55 | 11
+0 |  "Here are the details for the upcoming training session." | 58 | 49 | 9
+
+Spam and Ham Statistics:
+Spam Emails: 1092 (49.93%)
+Ham Emails: 1095 (50.07%)
