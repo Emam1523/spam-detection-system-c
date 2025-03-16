@@ -5,9 +5,7 @@
 #include "Preprocessing.h"
 #include "Vectorization.h"
 #include "Split_Vectorized_Dataset.h"
-#include "Logistic_Model_Small_D.h"
-//#include "Logistic_Model_Large_D.h"
+#include "Logistic_Model.h"
 #include "test_message.h"
  
-
 #endif
