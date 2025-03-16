@@ -3,25 +3,25 @@
 #include <math.h>
 #include <string.h>
 
-#define MAX_EMAILS 2200
-#define VOCAB_SIZE 430
+#define MAX_EMAILS 2350
+#define VOCAB_SIZE 550
 #define LEARNING_RATE 0.1
-#define EPOCHS 2000
+#define EPOCHS 1500
 
-        // Dataset: Emails and their labels (1 = spam, 0 = ham)
+// Dataset: Emails and their labels (1 = spam, 0 = ham)
 double emails[MAX_EMAILS][VOCAB_SIZE];
 int labels[MAX_EMAILS];
 
-        // Model parameters
+// Model parameters (weights and bias)
 double weights[VOCAB_SIZE] = {0};
 double bias = 0;
 
-        // Sigmoid function
+// Sigmoid function
 double sigmoid(double z) {
     return 1.0 / (1.0 + exp(-z));
 }
 
-        // Predict the probability of an email being spam
+// Predict the probability of an email being spam
 double predict(double *email) {
     double z = bias;
     for (int i = 0; i < VOCAB_SIZE; i++) {
@@ -30,42 +30,51 @@ double predict(double *email) {
     return sigmoid(z);
 }
 
-        // Train the logistic regression model
+// Compute the log-likelihood (negative log-likelihood for minimization)
+double log_likelihood() {
+    double log_likelihood_value = 0;
+    for (int i = 0; i < MAX_EMAILS; i++) {
+        double y_pred = predict(emails[i]);
+        log_likelihood_value += labels[i] * log(y_pred) + (1 - labels[i]) * log(1 - y_pred);
+    }
+    return -log_likelihood_value / MAX_EMAILS;
+}
+
+// Train the logistic regression model using gradient descent
 void train() {
     for (int epoch = 0; epoch < EPOCHS; epoch++) {
-        double dw[VOCAB_SIZE] = {0};
-        double db = 0;
+        double dw[VOCAB_SIZE] = {0};  // Gradients for weights
+        double db = 0;  // Gradient for bias
 
         // Compute gradients
         for (int i = 0; i < MAX_EMAILS; i++) {
             double y_pred = predict(emails[i]);
             double error = y_pred - labels[i];
+
+            // Update gradients for weights
             for (int j = 0; j < VOCAB_SIZE; j++) {
                 dw[j] += error * emails[i][j];
             }
+
+            // Update gradient for bias
             db += error;
         }
 
-        // Update weights and bias
+        // Update weights and bias using gradient descent
         for (int j = 0; j < VOCAB_SIZE; j++) {
             weights[j] -= LEARNING_RATE * dw[j] / MAX_EMAILS;
         }
         bias -= LEARNING_RATE * db / MAX_EMAILS;
 
-        // Print loss and gradients every 100 epochs
+        // Print loss, dw[0] and db every 100 epochs
         if (epoch % 100 == 0) {
-            double loss = 0;
-            for (int i = 0; i < MAX_EMAILS; i++) {
-                double y_pred = predict(emails[i]);
-                loss += -labels[i] * log(y_pred) - (1 - labels[i]) * log(1 - y_pred);
-            }
-            loss /= MAX_EMAILS;
+            double loss = log_likelihood();
             //printf("Epoch %d, Loss: %f, dw[0]: %f, db: %f\n", epoch, loss, dw[0], db);
         }
     }
 }
 
-        // This is for mini dataset. Load dataset from CSV file (first column = label, rest = features)
+// This function loads the dataset from a CSV file
 void load_dataset(const char *filename) {
     FILE *file = fopen(filename, "r");
     if (!file) {
@@ -74,7 +83,7 @@ void load_dataset(const char *filename) {
     }
 
     // Skip header
-    char line[4096];   //4096 for mini dataset
+    char line[6002];
     if (fgets(line, sizeof(line), file) == NULL) {
         printf("Error: File is empty or missing header\n");
         fclose(file);
@@ -90,29 +99,23 @@ void load_dataset(const char *filename) {
         }
 
         // Parse label
-        int label = atoi(token);
-        labels[row_count] = label;
+        labels[row_count] = atoi(token);
 
-        // Parse features
+        // Parse features (pad with 0.0 if missing)
         int col = 0;
-        while ((token = strtok(NULL, ",\n")) != NULL && col < VOCAB_SIZE) {
-            emails[row_count][col] = atof(token);
+        while (col < VOCAB_SIZE) { // Ensure exactly 540 features
+            token = strtok(NULL, ",\n");
+            emails[row_count][col] = (token != NULL) ? atof(token) : 0.0;
             col++;
-        }
-
-        if (col != VOCAB_SIZE) {
-            //printf("Error: Row %d has %d features (expected %d)\n", row_count, col, VOCAB_SIZE);
-            continue;
         }
 
         row_count++;
     }
 
     fclose(file);
-    //printf("Dataset loaded successfully. Total rows: %d\n", row_count);
 }
 
-        // Save trained model to a file
+// Save the trained model (weights and bias) to a file
 void save_model(const char *filename) {
     FILE *file = fopen(filename, "w");
     if (!file) {
@@ -120,16 +123,22 @@ void save_model(const char *filename) {
         exit(1);
     }
 
+    // Write weights with commas between them
     for (int i = 0; i < VOCAB_SIZE; i++) {
-        fprintf(file, "%lf,", weights[i]);
+        if (i == VOCAB_SIZE - 1) {
+            fprintf(file, "%lf", weights[i]); // No comma for last weight
+        } else {
+            fprintf(file, "%lf,", weights[i]);
+        }
     }
-    printf("\n");
-    fprintf(file, "%lf\n", bias);
 
+    // Write bias after the weights
+    fprintf(file, ",%lf\n", bias);
+    
     fclose(file);
 }
 
-        // This is for mini dataset. Evaluate the model on a test dataset
+// Evaluate the model using the test dataset
 void evaluate_model(const char *test_file) {
     double (*test_emails)[VOCAB_SIZE] = (double (*)[VOCAB_SIZE])malloc(MAX_EMAILS * sizeof(*test_emails));
     int *test_labels = (int *)malloc(MAX_EMAILS * sizeof(int));
@@ -141,7 +150,6 @@ void evaluate_model(const char *test_file) {
     }
 
     int test_row_count = 0;
-    //printf("Loading test data from %s\n", test_file);
     FILE *file = fopen(test_file, "r");
     if (!file) {
         free(test_emails);
@@ -151,7 +159,7 @@ void evaluate_model(const char *test_file) {
     }
 
     // Skip header
-    char line[8192];   //8192 for mini dataset
+    char line[6002];
     if (fgets(line, sizeof(line), file) == NULL) {
         printf("Error: Test file is empty or missing header\n");
         fclose(file);
@@ -209,28 +217,30 @@ void evaluate_model(const char *test_file) {
     double accuracy = (double)correct / test_row_count;
     //printf("Test Accuracy: %.2f%%\n", accuracy * 100);
 
-            // Free allocated memory
+    // Free allocated memory
     free(test_emails);
     free(test_labels);
 }
 
-void logistic_model_small(const char *tr_file, const char *te_file) {
-    if(tr_file == NULL || te_file == NULL) {
+// Main function to train the model and evaluate it on test data
+void logistic_model(const char *train_file, const char *test_file) {
+    if (train_file == NULL || test_file == NULL) {
         printf("Error: Invalid file paths.\n");
         return;
     }
-    // Load dataset
-    load_dataset(tr_file);
 
-        // Train the model
+    // Load dataset
+    load_dataset(train_file);
+
+    // Train the model
     train();
-    //printf("Model trained successfully!\n");
 
     // Save the trained model
     save_model("logistic_model.txt");
 
-        // Evaluate the model on the test dataset
-    evaluate_model(te_file);
+    // Evaluate the model on the test dataset
+    evaluate_model(test_file);
 
     //printf("Model trained, saved, and evaluated successfully!\n");
 }
+
