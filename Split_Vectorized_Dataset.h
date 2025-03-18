@@ -2,8 +2,8 @@
 #include <stdlib.h>
 #include <string.h>
 
-#define MAX_LINE_LENGTH3 10000
-#define MAX_EMAILS 2200
+#define MAX_LINE_LENGTH3 1000
+#define MAX_EMAILS 2350
 
 void split_dataset(const char *input_file, const char *train_file, const char *test_file, float train_ratio) {
     FILE *input = fopen(input_file, "r");
