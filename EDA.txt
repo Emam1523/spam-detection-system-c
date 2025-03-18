@@ -1,6 +1,6 @@
 Exploratory Data Analysis (EDA) Results:
 
-Total Emails: 2187
+Total Emails: 2332
 
 Columns:
 Label | Email | Length | Characters | Words
@@ -13,12 +13,12 @@ Label | Email | Length | Characters | Words
 .... .... .... .... .... .... .... .... .... ....
 .... .... .... .... .... .... .... .... .... ....
 .... .... .... .... .... .... .... .... .... ....
-0 |  "The project scope has been updated. Please review." | 53 | 45 | 8
-1 |  "You have been selected for a special offer. Claim now!" | 57 | 47 | 10
-0 |  "Don't forget to submit your expense report by Monday." | 56 | 47 | 9
-1 |  "Urgent: Your bank account has been frozen. Call now to resolve." | 66 | 55 | 11
-0 |  "Here are the details for the upcoming training session." | 58 | 49 | 9
+1 |  "Hi, I’m a U.S. soldier on a secret mission. I need your help transferring money. Let’s talk." | 99 | 82 | 17
+1 |  "We've detected that your account password was leaked. Change it immediately to protect your data." | 100 | 85 | 15
+0 |  "Your job application has been received. We will get back to you soon." | 72 | 59 | 13
+1 |  "Your Google Drive files will be deleted due to storage issues. Upgrade now to prevent data loss." | 99 | 82 | 17
+1 |  "Your account has been hacked! Click here to reset your password and secure your information." | 95 | 80 | 15
 
 Spam and Ham Statistics:
-Spam Emails: 1092 (49.93%)
-Ham Emails: 1095 (50.07%)
+Spam Emails: 1210 (51.89%)
+Ham Emails: 1122 (48.11%)
