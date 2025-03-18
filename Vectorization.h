@@ -4,8 +4,8 @@
 #include <ctype.h>
 
 #define MAX_LINE_LENGTH2 170
-#define MAX_EMAILS 2200
-#define MAX_VOCAB_SIZE 430
+#define MAX_EMAILS 2350
+#define MAX_VOCAB_SIZE 550
 
         // Structure to store email details
 typedef struct {
