@@ -5,7 +5,7 @@
 #include <stdio.h>
 
 #define MAX_LINE_LENGTH1 200
-#define MAX_EMAILS 2200
+#define MAX_EMAILS 2350
 #define STOP_WORDS_COUNT 115
 
         // Sample stop words (You can add more to this list)
