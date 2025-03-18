@@ -4,7 +4,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#define VOCAB_SIZE 430
+#define VOCAB_SIZE 550
 #define MAX_WORD_LEN 50
 
 char vocabulary[VOCAB_SIZE][MAX_WORD_LEN];
